@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
@@ -25,20 +25,37 @@ import { DocumentModule } from './document/document.module';
 import { AttributeValueModule } from './attribute-value/attribute-value.module';
 import { OfficerModule } from './officer/officer.module';
 import { RolesGuard } from './auth/roles.guard';
+import { RoleModule } from './role/role.module';
+import { LoggingMiddleware } from 'log/logging.middleware';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 
 @Module({
   imports: [
+    ServeStaticModule.forRoot({
+      rootPath: join(process.cwd(), 'uploads'),
+      serveRoot: '/uploads', // Đường dẫn bạn muốn sử dụng để truy cập các file từ trình duyệt
+      serveStaticOptions: {
+        index: false, // Tắt chức năng hiển thị index.html khi truy cập thư mục
+        setHeaders: (res, path) => {
+          // Thiết lập header để cho phép trình duyệt tải các tài nguyên từ thư mục uploads
+          res.setHeader('Cache-Control', 'public, max-age=31536000');
+        },
+      },
+    }),
     TypeOrmModule.forRoot(dataSourceOptions),
     TypeOrmModule.forFeature([User]),
     ConfigModule.forRoot(),
-    AuthModule, 
+    AuthModule,
     UserModule,
     JwtModule.registerAsync({
-      imports: [ConfigModule], 
-      inject: [ConfigService], 
+      imports: [ConfigModule],
+      inject: [ConfigService],
       useFactory: async (configService: ConfigService) => ({
         secret: configService.get<string>('SECRET_KEY'),
-        signOptions: { expiresIn: configService.get<string>('EXP_IN_REFRESH_TOKEN') },
+        signOptions: {
+          expiresIn: configService.get<string>('EXP_IN_REFRESH_TOKEN'),
+        },
       }),
     }),
     DepartmentModule,
@@ -53,19 +70,24 @@ import { RolesGuard } from './auth/roles.guard';
     ProceduralStepModule,
     DocumentModule,
     AttributeValueModule,
-    OfficerModule
+    OfficerModule,
+    RoleModule,
   ],
   controllers: [AppController, FileController],
   providers: [
     AppService,
     {
       provide: APP_GUARD,
-      useClass: AuthGuard
+      useClass: AuthGuard,
     },
     {
       provide: APP_GUARD,
-      useClass: RolesGuard
-    }
+      useClass: RolesGuard,
+    },
   ],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(LoggingMiddleware).forRoutes('*'); // Áp dụng middleware cho tất cả các route
+  }
+}

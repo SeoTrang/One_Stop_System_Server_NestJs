@@ -24,7 +24,7 @@ export class AuthService {
         const hash = await bcrypt.hash(password,salt);
         return hash;
     }
-    private async generateToken(payload: {id:number,identifier: string}){
+    private async generateToken(payload:any){
         // console.log(this.configService.get<string>('EXP_IN_REFRESH_TOKEN'));
         // console.log(this.configService.get<string>('SECRET_KEY'));
         
@@ -92,7 +92,7 @@ export class AuthService {
         const checkPassword = await bcrypt.compareSync(userLoginDto.password,user.password);
         if(!checkPassword) throw new HttpException('Password is incorrect',HttpStatus.BAD_REQUEST);
 
-        const payload = {id:user.id,identifier: user.identifier,type:'officer'};
+        const payload = {id:user.id,identifier: user.identifier,type:'officer', isAdmin:user.isAdmin};
         return await this.generateToken(payload);
     }
 }

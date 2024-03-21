@@ -1,5 +1,10 @@
 import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
+export enum Gender {
+    MALE = 'male',
+    FEMALE = 'female',
+  }
+
 @Entity()
 export class User{
     @PrimaryGeneratedColumn()
@@ -16,6 +21,15 @@ export class User{
     
     @Column()
     batch: string;
+
+    @Column({ type: 'text'})
+    address: string;
+
+    @Column({ type: 'enum', enum: Gender })
+    gender: Gender;
+
+    @Column({nullable: true})
+    avatar: string;
 
     @CreateDateColumn()
     created_at: Date;

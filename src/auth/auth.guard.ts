@@ -35,11 +35,11 @@ export class AuthGuard implements CanActivate{
                 secret: this.configService.get<string>("SECRET_KEY")
             })
 
-            let user = null;
-            if(payload.type == 'student'){
-                user = await this.userRepository.findOneBy({id: payload.id, identifier: payload.identifier})
-            }
-            request['user'] = user;
+            // let user = null;
+            // if(payload.type == 'student'){
+            //     user = await this.userRepository.findOneBy({id: payload.id, identifier: payload.identifier})
+            // }
+            // request['user'] = user;
             request['user_data'] = payload;
 
         } catch (error) {

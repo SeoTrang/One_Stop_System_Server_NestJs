@@ -1,6 +1,10 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsEmail, IsNotEmpty } from "class-validator";
+import { IsEmail, IsEnum, IsNotEmpty } from "class-validator";
 
+enum Gender{
+    MALE = "male",
+    FEMALE = "female"
+}
 export class FormOfficerDto{
     @ApiProperty()
     @IsNotEmpty()
@@ -22,5 +26,17 @@ export class FormOfficerDto{
     @ApiProperty()
     @IsNotEmpty()
     department_id: number;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    address: string;
+
+    @ApiProperty()
+    avatar: string;
+
+    @ApiProperty({enum: ['male', 'female']})
+    @IsNotEmpty()
+    @IsEnum(Gender)
+    gender: Gender;
 
 }
