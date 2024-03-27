@@ -12,7 +12,7 @@ export class ServiceDto{
 
     @ApiProperty()
     @IsNotEmpty()
-    time_handle:number;
+    time_handle:string;
 
     @ApiProperty()
     @IsNotEmpty()

@@ -1,4 +1,5 @@
 import { Document } from "src/document/entities/document.entity";
+import { FormFile } from "src/form-file/entities/formFile.entity";
 import { Officer } from "src/officer/entities/officer.entity";
 import { Post } from "src/post/entities/post.entity";
 import { ProceduralStep } from "src/procedural-step/entities/proceduralStep.entity";
@@ -36,4 +37,7 @@ export class Department{
 
     @OneToMany(() => Officer,(officer) => officer.department)
     officers: Officer[];
+
+    @OneToMany(() => FormFile,(formFile) => formFile.department)
+    formFiles: FormFile[];
 }

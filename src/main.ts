@@ -24,6 +24,9 @@ async function bootstrap() {
     .addTag('Document')
     .addTag('Officer')
     .addTag('Role')
+    .addTag('Faculties')
+    .addTag('form-file')
+    .addTag('Download')
     .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, config);

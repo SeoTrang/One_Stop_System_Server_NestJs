@@ -6,7 +6,7 @@ export const dataSourceOptions: DataSourceOptions = {
     port: 3306,
     username: 'root',
     password: '',
-    database: 'one_stop_system',
+    database: 'one_stop_system_2',
     entities: ['dist/**/*.entity.js'],
     migrations: ['dist/db/migrations/*.js'],
     synchronize: false

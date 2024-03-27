@@ -1,4 +1,5 @@
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Faculties } from "src/faculties/entities/faculties.entity";
+import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 export enum Gender {
     MALE = 'male',
@@ -22,6 +23,15 @@ export class User{
     @Column()
     batch: string;
 
+    @Column()
+    email: string;
+
+    @Column()
+    phone: string;
+
+    @Column()
+    in_class: string;
+
     @Column({ type: 'text'})
     address: string;
 
@@ -37,6 +47,6 @@ export class User{
     @UpdateDateColumn()
     updated_at: Date;
 
-    
-
+    @ManyToOne(() => Faculties, (faculties) => faculties.users)
+    faculty: Faculties;
 }

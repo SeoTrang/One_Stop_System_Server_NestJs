@@ -1,6 +1,8 @@
 
 
+import { Officer } from "src/officer/entities/officer.entity";
 import { Post } from "src/post/entities/post.entity";
+import { User } from "src/user/entities/user.entity";
 import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 @Entity()
@@ -31,5 +33,8 @@ export class PostComment{
 
     @UpdateDateColumn()
     updated_at: Date;
+
+    user?:User;
+    officer?:Officer;
     
 }

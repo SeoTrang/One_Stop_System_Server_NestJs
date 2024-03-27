@@ -63,6 +63,7 @@ export class OfficerService {
             address: formOfficerDto.address,
             gender: formOfficerDto.gender,
             avatar: formOfficerDto.avatar || null,
+            phone: formOfficerDto.phone
         };
         
     
@@ -122,6 +123,8 @@ export class OfficerService {
             }
         })
 
+        console.log(user);
+        
         if (!user) {
             throw new HttpException('user not found',HttpStatus.NOT_FOUND);
         }
@@ -138,9 +141,16 @@ export class OfficerService {
                 ...role
             };
         }));
+
+        user_save = {
+            ...user,
+            roles: roles
+        }
+
         
-        await this.officerRepository.save(user_save);
-        return user_save;
+        
+        return await this.officerRepository.save(user_save);
+        
         
 
     }

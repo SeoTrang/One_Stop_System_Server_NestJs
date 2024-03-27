@@ -1,6 +1,7 @@
 import { AttributeFormService } from "src/attribute-form-service/entities/attributeFormService.entity";
 import { Department } from "src/department/entities/department.entity";
 import { Document } from "src/document/entities/document.entity";
+import { FormFile } from "src/form-file/entities/formFile.entity";
 import { ProceduralStep } from "src/procedural-step/entities/proceduralStep.entity";
 import { Column, CreateDateColumn, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
@@ -16,7 +17,7 @@ export class Service{
     type: string;
 
     @Column()
-    time_handle:number;
+    time_handle:string;
 
     @Column({ type: 'text', nullable: true }) // Đặt kiểu dữ liệu là 'text'
     description: string;
@@ -38,4 +39,7 @@ export class Service{
 
     @OneToMany(() => Document,(document) => document.service)
     documents: Document[];
+
+    @OneToMany(()=> FormFile,(formFile)=> formFile.service)
+    formFiles: FormFile[];
 }

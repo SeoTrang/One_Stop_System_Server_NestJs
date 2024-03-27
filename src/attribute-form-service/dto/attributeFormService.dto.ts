@@ -7,7 +7,7 @@ export class AttributeFormServiceDto{
     name: string;
 
     @ApiProperty()
-    @IsIn(['text', 'select', 'checkBox', 'email', 'phoneNumber'])
+    @IsIn(['Input', 'Select', 'Checkbox'])
     @IsNotEmpty()
     type: string;
 

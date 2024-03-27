@@ -67,7 +67,9 @@ export class PostController {
     }
 
     @Get()
-    async findAll():Promise<any>{
+    async findAll(@Req() req:any):Promise<any>{
+        console.log("====user_data===");
+        console.log(req['user_data']);
         return await this.postService.findAll();
     }
 }

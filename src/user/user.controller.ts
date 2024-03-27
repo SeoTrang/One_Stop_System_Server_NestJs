@@ -1,6 +1,6 @@
-import { Body, Controller, Get, Post, SetMetadata } from '@nestjs/common';
+import { Body, Controller, Get, Post, SetMetadata, UsePipes, ValidationPipe } from '@nestjs/common';
 import { UserService } from './user.service';
-import { CreateUserDto } from './dto/create-user.dto';
+import {FormUserDto } from './dto/form-user.dto';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('User')
@@ -11,8 +11,9 @@ export class UserController {
     ){}
 
     @Post()
-    async create(@Body() createUserDto: CreateUserDto) : Promise<any>{
-        return await this.userService.create(createUserDto);
+    @UsePipes(ValidationPipe)
+    async create(@Body() formUserDto: FormUserDto) : Promise<any>{
+        return await this.userService.create(formUserDto);
     }
 
     @Get('/all')

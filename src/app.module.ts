@@ -29,6 +29,9 @@ import { RoleModule } from './role/role.module';
 import { LoggingMiddleware } from 'log/logging.middleware';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
+import { FacultiesModule } from './faculties/faculties.module';
+import { FormFileModule } from './form-file/form-file.module';
+import { DownloadModule } from './download/download.module';
 
 @Module({
   imports: [
@@ -72,6 +75,9 @@ import { join } from 'path';
     AttributeValueModule,
     OfficerModule,
     RoleModule,
+    FacultiesModule,
+    FormFileModule,
+    DownloadModule,
   ],
   controllers: [AppController, FileController],
   providers: [

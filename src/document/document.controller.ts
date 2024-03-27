@@ -3,6 +3,7 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { DocumentService } from './document.service';
 import { AttributeValueService } from 'src/attribute-value/attribute-value.service';
 import { UpdateDocumentDto } from './dto/updateDocment.dto';
+import { FormDocumentDto } from './dto/form-document.dto';
 
 @ApiTags('Document')
 @ApiBearerAuth()
@@ -15,7 +16,7 @@ export class DocumentController {
 
     @Post()
     @UsePipes(ValidationPipe)
-    async create(@Req() req: any,@Body() body: any):Promise<any>{
+    async create(@Req() req: any,@Body() body: FormDocumentDto):Promise<any>{
 
         // console.log(body);
         // console.log(req['user_data']);

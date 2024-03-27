@@ -24,6 +24,9 @@ export class Officer{
     @Column()
     email: string;
 
+    @Column()
+    phone: string;
+
     @Column({default: false})
     isAdmin: boolean;
 
