@@ -8,12 +8,16 @@ import { PostMediaContent } from 'src/post-media-content/entities/postMediaConte
 import { Department } from 'src/department/entities/department.entity';
 import { Officer } from 'src/officer/entities/officer.entity';
 import { User } from 'src/user/entities/user.entity';
+import { PostCommentService } from 'src/post-comment/post-comment.service';
+import { PostReactionService } from 'src/post-reaction/post-reaction.service';
+import { PostComment } from 'src/post-comment/entities/postComment.entity';
+import { PostReaction } from 'src/post-reaction/entities/postReaction.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Post,PostMediaContent,Department,Officer,User])
+    TypeOrmModule.forFeature([Post,PostMediaContent,Department,Officer,User,PostComment,PostReaction])
   ],
   controllers: [PostController],
-  providers: [PostService,PostMediaContentService]
+  providers: [PostService,PostMediaContentService,PostCommentService,PostReactionService]
 })
 export class PostModule {}

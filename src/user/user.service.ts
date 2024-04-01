@@ -65,4 +65,12 @@ export class UserService {
     async findAll(): Promise<any>{
         return this.userRepository.find();
     }
+
+    async getProfile(user_id: number): Promise<any> {
+        return await this.userRepository.findOne({
+            where: {
+                id: user_id
+            }
+        })
+    }
 }

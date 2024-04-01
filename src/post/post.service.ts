@@ -53,6 +53,14 @@ export class PostService {
         return sortedComments;
     }
 
+    async findOnePostItem(post_id: number) : Promise<Post>{
+        return await this.postRepository.findOne({
+            where:{
+                id: post_id
+            }
+        })
+    }
+
     async findAll(): Promise<any>{
         let data = await this.postRepository.find({
             relations:{
@@ -114,5 +122,26 @@ export class PostService {
         }
         
         return data;
+    }
+
+    async update(post_id: number,department_id:number, createPostDto: CreatePostDto): Promise<any>{
+        const department = await this.departMentRepository.findOne({
+            where:{
+                id: department_id
+            }
+        })
+
+        const res = await this.postRepository.update(post_id,{
+            ...createPostDto,
+            department: department
+        });
+
+       
+
+        return true;
+    }
+
+    async delete(id: number) : Promise<any>{
+        return await this.postRepository.delete(id);
     }
 }

@@ -40,4 +40,19 @@ export class PostCommentService {
     async delete(id:number):Promise<DeleteResult>{
         return await this.postCommentRepository.delete(id);
     }
+
+    async deleteAllByPostId(post_id: number): Promise<any> {
+        try {
+            const result = await this.postCommentRepository.delete({
+                post: {
+                    id: post_id
+                }
+            });
+            return result;
+        } catch (error) {
+            // Xử lý lỗi nếu cần
+            console.error("Error deleting reactions:", error);
+            throw error;
+        }
+    }
 }

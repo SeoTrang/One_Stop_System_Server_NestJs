@@ -9,5 +9,5 @@ export class PostMendiaContentDto{
     @ApiProperty()
     type: string;
 
-    post:Post;
+    post?:Post;
 }
