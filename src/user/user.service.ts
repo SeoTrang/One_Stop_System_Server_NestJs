@@ -1,18 +1,21 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, UpdateResult } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 
 import { User } from './entities/user.entity';
 import { FormUserDto } from './dto/form-user.dto';
 import { Faculties } from 'src/faculties/entities/faculties.entity';
 import { CreateUserDto } from './dto/create-user.dto';
-
+import { Officer } from 'src/officer/entities/officer.entity';
+import { FormOfficerDto } from 'src/officer/dto/formOfficer.dto';
+import { FormUpdateUserDto } from './dto/update-user.dto';
 @Injectable()
 export class UserService {
     constructor(
         @InjectRepository(User) private userRepository: Repository<User>,
-        @InjectRepository(Faculties) private facultiesRepository: Repository<Faculties>
+        @InjectRepository(Faculties) private facultiesRepository: Repository<Faculties>,
+        @InjectRepository(Officer) private officerRepository: Repository<Officer>
     )
     {}
 
@@ -72,5 +75,81 @@ export class UserService {
                 id: user_id
             }
         })
+    }
+
+
+    async updateUser(user_id: number, user_data: any): Promise<UpdateResult> {
+
+        const {faculty_id,...data} = user_data;
+        let faculty: Faculties;
+        if(user_data?.faculty_id){
+            faculty = await this.facultiesRepository.findOne({
+                where: {
+                    id: Number(user_data.faculty_id)
+                }
+            });
+        }
+
+        const user:User = await this.userRepository.findOne({
+            where:{
+                id: Number(user_id)
+            }
+        })
+
+        const userUpdateData:User = {
+            ...user,
+            ...data
+        }
+
+        if(user_data?.faculty_id){
+            userUpdateData.faculty = faculty;
+        }
+
+        console.log(userUpdateData);
+        
+
+        return await this.userRepository.update(userUpdateData.id,userUpdateData);
+
+
+        
+        // return await this.userRepository.update(user_id, user_data);
+        // if (user_data instanceof FormUpdateUserDto) {
+        // } else {
+        //     // Xử lý nếu user_data là một instance của FormOfficerDto
+        //     // Ví dụ: throw error hoặc xử lý theo cách khác tùy thuộc vào logic của bạn
+        // }
+    }
+
+    async getUserByIdentifier(identifier: string):Promise<any>{
+        console.log(identifier);
+        
+        try {
+            let user: any;
+            user = await this.userRepository.findOne({
+                where: {
+                    identifier: identifier
+                }
+            });
+    
+            if (user) {
+                console.log(user);
+                
+                return user;
+            }
+            
+            user = await this.officerRepository.findOne({
+                where: {
+                    identifier: identifier
+                }
+            });
+    
+            console.log('user 2');
+            console.log(user);
+            
+            
+            return user || null; // Trả về null nếu không tìm thấy user
+        } catch (error) {
+            throw new Error(`Error in getUserByIdentifier: ${error.message}`);
+        }
     }
 }

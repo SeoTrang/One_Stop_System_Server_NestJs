@@ -1,15 +1,19 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, UpdateResult } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 
 import { Officer } from './entities/officer.entity';
 import { FormOfficerDto } from './dto/formOfficer.dto';
-import { CreateOfficerDto } from './dto/officer.dto';
+import { OfficerDto } from './dto/officer.dto';
 import { Department } from 'src/department/entities/department.entity';
 import { RoleDto } from 'src/role/dto/Role.dto';
 import { Role } from 'src/role/entities/role.entity';
 import { RoleService } from 'src/role/role.service';
+import { FormUserDto } from 'src/user/dto/form-user.dto';
+import { FormUpdateUserDto } from 'src/user/dto/update-user.dto';
+import {UpdateOfficerDto } from './dto/updateOfficer.dto';
+import { FormUpdateOfficerDto } from './dto/FormUpdateOfficer.dto';
 
 @Injectable()
 export class OfficerService {
@@ -22,22 +26,22 @@ export class OfficerService {
 
     // async create(formOfficerDto: FormOfficerDto):Promise<any>{
     //     const hashPass = await bcrypt.hash(formOfficerDto.password,10)
-    //     let createOfficerDto = new CreateOfficerDto();
+    //     let OfficerDto = new OfficerDto();
     //     let department = await this.departmentRepository.findOne({
     //         where:{
     //             id: Number(formOfficerDto.department_id)
     //         }
     //     })
-    //     createOfficerDto.department = department;
-    //     createOfficerDto.password = hashPass;
-    //     createOfficerDto.email = formOfficerDto.email;
-    //     createOfficerDto.name = formOfficerDto.name;
-    //     createOfficerDto.identifier = formOfficerDto.identifier;
-    //     createOfficerDto.address = formOfficerDto.address;
-    //     createOfficerDto.avatar = formOfficerDto.avatar || null;
-    //     createOfficerDto.gender = formOfficerDto.gender;
+    //     OfficerDto.department = department;
+    //     OfficerDto.password = hashPass;
+    //     OfficerDto.email = formOfficerDto.email;
+    //     OfficerDto.name = formOfficerDto.name;
+    //     OfficerDto.identifier = formOfficerDto.identifier;
+    //     OfficerDto.address = formOfficerDto.address;
+    //     OfficerDto.avatar = formOfficerDto.avatar || null;
+    //     OfficerDto.gender = formOfficerDto.gender;
         
-    //     return await this.officerRepository.save(createOfficerDto);
+    //     return await this.officerRepository.save(OfficerDto);
     // }
 
     async create(formOfficerDto: FormOfficerDto): Promise<any> {
@@ -54,7 +58,7 @@ export class OfficerService {
     
         const hashPass = await bcrypt.hash(formOfficerDto.password, 10);
 
-        const createOfficerDto: CreateOfficerDto = {
+        const OfficerDto: OfficerDto = {
             identifier: formOfficerDto.identifier,
             name: formOfficerDto.name,
             password: hashPass,
@@ -68,17 +72,17 @@ export class OfficerService {
         
     
         // const officer: Officer = {
-        //     identifier: createOfficerDto.identifier,
-        //     name: createOfficerDto.name,
-        //     password: createOfficerDto.password,
-        //     email: createOfficerDto.email,
-        //     department: createOfficerDto.department,
-        //     address: createOfficerDto.address,
-        //     gender: createOfficerDto.gender,
-        //     avatar: createOfficerDto.avatar,
+        //     identifier: OfficerDto.identifier,
+        //     name: OfficerDto.name,
+        //     password: OfficerDto.password,
+        //     email: OfficerDto.email,
+        //     department: OfficerDto.department,
+        //     address: OfficerDto.address,
+        //     gender: OfficerDto.gender,
+        //     avatar: OfficerDto.avatar,
         // };
         
-        return await this.officerRepository.save(createOfficerDto);
+        return await this.officerRepository.save(OfficerDto);
     }
     
 
@@ -116,7 +120,7 @@ export class OfficerService {
     async set_RBAC(role: any, user_id: number): Promise<any>{
         console.log(role);
         console.log(user_id);
-        let user_save = new CreateOfficerDto();
+        let user_save = new OfficerDto();
         let user = await this.officerRepository.findOne({
             where:{
                 id: user_id
@@ -153,5 +157,64 @@ export class OfficerService {
         
         
 
+    }
+
+    async updateProfile(user_id: number, user_data: FormUpdateOfficerDto): Promise<any> {
+        console.log(user_data);
+        const {department_id, ...data} = user_data;
+        let department: Department;
+        if(user_data?.department_id){
+            department = await this.departmentRepository.findOne({
+                where:{
+                    id: Number(user_data?.department_id)
+                }
+            })
+        }
+        console.log(department);
+        console.log(data);
+        
+        let officer:Officer = await this.officerRepository.findOne({
+            where:{
+                id: Number(user_id)
+            }
+        })
+
+        if(!user_data) return '';
+        // Sử dụng spread operator hoặc Object.assign để gán các giá trị từ user_data vào officer
+        const updatedOfficer:Officer = {
+            ...officer, // Giữ nguyên các giá trị hiện có của officer
+            ...data // Ghi đè các giá trị từ user_data nếu chúng tồn tại
+        };
+
+        if(department){
+            updatedOfficer.department = department;
+        }
+        console.log(updatedOfficer);
+        
+        
+        return await this.officerRepository.update(updatedOfficer.id,updatedOfficer);
+        return ''
+        
+        // return await this.officerRepository.update(user_id, user_data);
+        if (user_data instanceof FormUpdateOfficerDto) {
+            console.log(user_id);
+            console.log(user_data);
+            const department = await this.departmentRepository.find({
+                where:{
+                    id: Number(user_data.department_id)
+                }
+            })
+            console.log(department);
+            
+            
+            // return await this.officerRepository.update(user_id, user_data);
+        } else {
+            console.log('k vao');
+            console.log(user_id);
+            console.log(user_data);
+            
+            // Xử lý nếu user_data là một instance của FormUserDto
+            // Ví dụ: throw error hoặc xử lý theo cách khác tùy thuộc vào logic của bạn
+        }
     }
 }

@@ -7,15 +7,15 @@ export enum Gender {
     FEMALE = 'female',
 }
 
-export class CreateOfficerDto {
-    identifier: string;
-    name: string;
-    password: string;
-    email: string;
-    phone: string;
-    department: Department;
+export class OfficerDto {
+    identifier?: string;
+    name?: string;
+    password?: string;
+    email?: string;
+    phone?: string;
+    department?: Department;
     roles?: Role[];
-    address: string;
-    gender: Gender; // Sử dụng kiểu Gender thay vì string
+    address?: string;
+    gender?: Gender; // Sử dụng kiểu Gender thay vì string
     avatar?: string;
 }

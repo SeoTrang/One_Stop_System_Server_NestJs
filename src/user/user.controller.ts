@@ -1,13 +1,14 @@
-import { Body, Controller, Get, Post, Req, SetMetadata, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Put, Req, SetMetadata, UsePipes, ValidationPipe } from '@nestjs/common';
 import { UserService } from './user.service';
 import {FormUserDto } from './dto/form-user.dto';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
-
+import { OfficerService } from 'src/officer/officer.service';
 @ApiTags('User')
 @Controller('users')
 export class UserController {
     constructor(
-        private userService: UserService
+        private userService: UserService,
+        private officerService: OfficerService
     ){}
 
     @Post()
@@ -26,5 +27,28 @@ export class UserController {
     async profile(@Req() req:any):Promise<any> {
         const user_id = req['user_data'].id;
         return await this.userService.getProfile(Number(user_id));
+    }
+
+    @Put()
+    async updateUser(@Req() req: any, @Body() userData: any): Promise<any> {
+        const user_id = req['user_data'].id;
+        const type_user = req['user_data'].type;
+    
+        console.log(req['user_data']);
+        console.log(type_user);
+        
+        if (type_user === 'officer') {
+            
+            return await this.officerService.updateProfile(Number(user_id), userData);
+        } else {
+            return await this.userService.updateUser(Number(user_id), userData);
+        }
+    }
+
+    @Get('/profile/:identifier')
+    async getUserByUserId(@Param("identifier") identifier: string): Promise<any>{
+        console.log(identifier);
+        
+        return await this.userService.getUserByIdentifier(identifier);
     }
 }
