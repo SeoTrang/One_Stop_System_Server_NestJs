@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AttributeValue } from './entities/attributeValue.entity';
 import { Repository } from 'typeorm';
@@ -19,7 +19,8 @@ export class AttributeValueService {
         // const savedMediaContents = await Promise.all(postMediaContents.map(async (mediaContent) => {
         //     return await this.postMediaContentRepository.save(mediaContent);
         // }));
-        console.log(document_id);
+        try {
+            console.log(document_id);
         console.log(attribute);
         const document = await this.documentRepository.findOne({
             where:{
@@ -40,7 +41,16 @@ export class AttributeValueService {
             })
 
             attributeValueDto.attributeFormService = attributeFormService;
-            return await this.attributeValueRepository.save(attributeValueDto);
+            attributeValueDto.value = obj[key] || null;
+            await this.attributeValueRepository.save(attributeValueDto);
+        }
+
+
+        return "success";
+        } catch (error) {
+            console.log(error);
+            // HttpException('can not save attribute',HttpStatus.INTERNAL_SERVER_ERROR);
+            
         }
         
 

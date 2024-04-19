@@ -2,7 +2,7 @@ import { AttributeFormService } from "src/attribute-form-service/entities/attrib
 import { Document } from "src/document/entities/document.entity";
 
 export class AttributeValueDto{
-    value: string;
+    value?: string;
     document: Document;
     attributeFormService: AttributeFormService;
 }

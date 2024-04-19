@@ -31,6 +31,7 @@ export class DocumentController {
         
         return await this.attributeValueService.create(Number(document.id),body.attribute);
         
+        return true;
     }
 
     @Put(':id')

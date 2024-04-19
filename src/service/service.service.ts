@@ -38,4 +38,13 @@ export class ServiceService {
             relations: ['attributeFormServices', 'attributeFormServices.attributeFormEnums', 'proceduralSteps', 'formFiles', 'department']
         });
     }
+
+    async getById(id: number): Promise<Service>{
+        return await this.serviceRepository.findOne({
+            where:{
+                id: id
+            },
+            relations: ['attributeFormServices', 'attributeFormServices.attributeFormEnums']
+        })
+    }
 }

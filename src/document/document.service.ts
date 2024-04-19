@@ -43,6 +43,8 @@ export class DocumentService {
                 }
             }
         })
+        // console.log(department);
+        
 
         let createDocumentDto = new CreateDocumentDto();
         createDocumentDto.service = service;
@@ -54,6 +56,7 @@ export class DocumentService {
         createDocumentDto.type_user = type_user;
 
         return await this.documentRepository.save(createDocumentDto);
+        return true;
 
     }
 

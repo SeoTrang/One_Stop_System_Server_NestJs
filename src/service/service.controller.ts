@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, UsePipes, ValidationPipe } from '@nestjs/common';
 import { ServiceService } from './service.service';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { ServiceDto } from './dto/service.dto';
@@ -21,6 +21,11 @@ export class ServiceController {
     @Get()
     async getAll():Promise<Service[]>{
         return await this.serviceService.getAll();
+    }
+
+    @Get(':id')
+    async getById(@Param('id') id: string):Promise<Service>{
+        return await this.serviceService.getById(Number(id));
     }
     
 }

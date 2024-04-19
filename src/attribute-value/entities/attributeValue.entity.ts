@@ -7,7 +7,7 @@ export class AttributeValue{
     @PrimaryGeneratedColumn()
     id:number;
 
-    @Column()
+    @Column({nullable: true})
     value: string;
 
     @CreateDateColumn()
