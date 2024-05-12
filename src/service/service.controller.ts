@@ -18,6 +18,11 @@ export class ServiceController {
         return await this.serviceService.create(serviceDto);
     }
 
+    @Get('/all-detail')
+    async getAllDetail():Promise<Service[]>{
+        return await this.serviceService.getAllDetail();
+    }
+
     @Get()
     async getAll():Promise<Service[]>{
         return await this.serviceService.getAll();

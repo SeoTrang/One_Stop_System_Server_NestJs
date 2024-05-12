@@ -33,6 +33,12 @@ export class ServiceService {
 
     }
 
+    async getAllDetail(): Promise<Service[]>{
+        return await this.serviceRepository.find({
+            relations: ['attributeFormServices', 'attributeFormServices.attributeFormEnums', 'proceduralSteps', 'formFiles', 'department']
+        });
+    }
+
     async getAll(): Promise<Service[]>{
         return await this.serviceRepository.find({
             relations: ['attributeFormServices', 'attributeFormServices.attributeFormEnums', 'proceduralSteps', 'formFiles', 'department']

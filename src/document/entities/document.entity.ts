@@ -1,5 +1,6 @@
 import { AttributeValue } from "src/attribute-value/entities/attributeValue.entity";
 import { Department } from "src/department/entities/department.entity";
+import { DocumentActivityTrace } from "src/document-activity-trace/entities/documentActivityTrace.entity";
 import { ProceduralStep } from "src/procedural-step/entities/proceduralStep.entity";
 import { Service } from "src/service/entities/service.entity";
 import { User } from "src/user/entities/user.entity";
@@ -11,7 +12,7 @@ export class Document{
     id: number;
 
     @Column()
-    status: number;
+    status: number; //1.pending 2.success 0.cancled
 
     @Column({nullable: true})
     description: string;
@@ -43,5 +44,8 @@ export class Document{
     @OneToMany(() => AttributeValue,(attributeValue) => attributeValue.document)
     attributeValues: AttributeValue[];
 
+
+    @OneToMany(() => DocumentActivityTrace,(documentActivityTrace) => documentActivityTrace.document)
+    documentActivityTraces: DocumentActivityTrace[];
 
 }

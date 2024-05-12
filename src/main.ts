@@ -27,6 +27,7 @@ async function bootstrap() {
     .addTag('Faculties')
     .addTag('form-file')
     .addTag('Download')
+    .addTag('document-activity-trace')
     .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, config);

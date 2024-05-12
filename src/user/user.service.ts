@@ -66,13 +66,20 @@ export class UserService {
     
 
     async findAll(): Promise<any>{
-        return this.userRepository.find();
+        return this.userRepository.find({
+            relations:{
+                faculty: true
+            }
+        });
     }
 
     async getProfile(user_id: number): Promise<any> {
         return await this.userRepository.findOne({
             where: {
                 id: user_id
+            },
+            relations:{
+                faculty: true
             }
         })
     }
@@ -140,6 +147,45 @@ export class UserService {
             user = await this.officerRepository.findOne({
                 where: {
                     identifier: identifier
+                }
+            });
+    
+            console.log('user 2');
+            console.log(user);
+            
+            
+            return user || null; // Trả về null nếu không tìm thấy user
+        } catch (error) {
+            throw new Error(`Error in getUserByIdentifier: ${error.message}`);
+        }
+    }
+
+    async getUserById(id: number):Promise<any>{
+        console.log(id);
+        
+        try {
+            let user: any;
+            user = await this.userRepository.findOne({
+                where: {
+                    id: id
+                },
+                relations:{
+                    faculty: true
+                }
+            });
+    
+            if (user) {
+                console.log(user);
+                
+                return user;
+            }
+            
+            user = await this.officerRepository.findOne({
+                where: {
+                    id: id
+                },
+                relations: {
+                    department: true
                 }
             });
     

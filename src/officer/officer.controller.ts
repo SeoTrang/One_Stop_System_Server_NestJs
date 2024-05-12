@@ -3,6 +3,7 @@ import { ApiBearerAuth, ApiConsumes, ApiOperation, ApiTags } from '@nestjs/swagg
 import { OfficerService } from './officer.service';
 import {  FormOfficerDto } from './dto/formOfficer.dto';
 import { Request } from 'express';
+import { Officer } from './entities/officer.entity';
 
 @ApiTags('Officer')
 @ApiBearerAuth()
@@ -29,6 +30,8 @@ export class OfficerController {
         
         
     }
+
+  
 
     @Get(':id')
     async getById(@Param('id') id):Promise<any>{

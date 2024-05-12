@@ -32,6 +32,9 @@ import { join } from 'path';
 import { FacultiesModule } from './faculties/faculties.module';
 import { FormFileModule } from './form-file/form-file.module';
 import { DownloadModule } from './download/download.module';
+import { Service } from './core/service/.service';
+import { DocxServiceService } from './core/service/docx-service.service';
+import { DocumentActivityTraceModule } from './document-activity-trace/document-activity-trace.module';
 
 @Module({
   imports: [
@@ -78,6 +81,7 @@ import { DownloadModule } from './download/download.module';
     FacultiesModule,
     FormFileModule,
     DownloadModule,
+    DocumentActivityTraceModule,
   ],
   controllers: [AppController, FileController],
   providers: [
@@ -90,6 +94,8 @@ import { DownloadModule } from './download/download.module';
       provide: APP_GUARD,
       useClass: RolesGuard,
     },
+    Service,
+    DocxServiceService,
   ],
 })
 export class AppModule implements NestModule {

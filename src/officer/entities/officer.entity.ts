@@ -1,6 +1,7 @@
 import { Department } from "src/department/entities/department.entity";
+import { DocumentActivityTrace } from "src/document-activity-trace/entities/documentActivityTrace.entity";
 import { Role } from "src/role/entities/role.entity";
-import { Column, CreateDateColumn, Entity, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 export enum Gender {
     MALE = 'male',
@@ -46,12 +47,16 @@ export class Officer{
     updated_at: Date;
 
     @ManyToOne(() => Department,(department)=> department.officers)
-    department: Department;
+    department?: Department;
     
     @ManyToMany(() => Role,(role)=> role.officers,{
         cascade: false
     })
     @JoinTable()
-    roles: Role[];
+    roles?: Role[];
+
+
+    @OneToMany(() => DocumentActivityTrace,(documentActivityTrace) => documentActivityTrace.officer)
+    documentActivityTraces?: DocumentActivityTrace[];
 
 }

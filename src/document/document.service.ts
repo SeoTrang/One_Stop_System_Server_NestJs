@@ -9,6 +9,7 @@ import { DocumentDto } from './dto/document.dto';
 import { ProceduralStep } from 'src/procedural-step/entities/proceduralStep.entity';
 import { CreateDocumentDto } from './dto/createDocument.dto';
 import { UpdateDocumentDto } from './dto/updateDocment.dto';
+import { AttributeFormEnum } from 'src/attribute-form-enum/entities/attributeFormEnum.entity';
 
 @Injectable()
 export class DocumentService {
@@ -17,7 +18,8 @@ export class DocumentService {
         @InjectRepository(Department) private departmentRepository: Repository<Department>,
         @InjectRepository(Service) private serviceRepository: Repository<Service>,
         @InjectRepository(ProceduralStep) private proceduralStepRepository: Repository<ProceduralStep>,
-        @InjectRepository(User) private userRepository: Repository<User>
+        @InjectRepository(User) private userRepository: Repository<User>,
+        @InjectRepository(AttributeFormEnum) private attributeFormEnumRepository: Repository<AttributeFormEnum>
     ){}
 
     async create(user_id:number, type_user:string, service_id:number):Promise<any>{
@@ -61,6 +63,38 @@ export class DocumentService {
     }
 
 
+    // async updateStatus(id: number, updateDocumentDto):Promise<UpdateResult>{
+    //     let document:Document = await this.documentRepository.findOne({
+    //         where:{
+    //             id: id
+    //         },
+    //         relations: {
+    //             proceduralStep: true
+    //         }
+    //     })
+    //     let proceduralSteps = await this.proceduralStepRepository.find({
+    //         where:{
+    //             documents:{
+    //                 id: id
+    //             }
+    //         }
+    //     })
+    //     if(updateDocumentDto.confirm !== 'confirm'){
+    //         document.status = 0;
+    //         document.description = updateDocumentDto.description;
+    //         return {}
+    //     }
+    //     proceduralSteps.sort((a,b) => a.step - b.step);
+
+    //     for (let index = 0; index < proceduralSteps.length; index++) {
+    //         if(document.proceduralStep.id === proceduralSteps[index].id){
+    //             document.proceduralStep = proceduralSteps[index];
+    //         }
+            
+    //     }
+
+
+    // }
     async update(document_id: number, updateDocumentDto: UpdateDocumentDto):Promise<any>{
         const proceduralSteps = await this.proceduralStepRepository.find({
             where:{
@@ -76,6 +110,10 @@ export class DocumentService {
         proceduralSteps.sort((a, b) => a.step - b.step);
 
         console.log(proceduralSteps);
+
+        
+
+
         const document = await this.documentRepository.findOne({
             where:{
                 id: document_id
@@ -85,11 +123,22 @@ export class DocumentService {
             }
         })
 
+
         if(updateDocumentDto.confirm !== 'confirm'){
             document.status = 0;
             document.description = updateDocumentDto.description;
-            return {}
+            return await this.documentRepository.update(document.id,document);
         }
+        
+        // kiểm tra xem đã là bộ phận cuối cùng xử lí chưa 
+        if(document.proceduralStep.id == proceduralSteps[proceduralSteps.length -1].id){
+            document.status = 2; // cập nhật trạng thái hoàn thành
+            document.description = updateDocumentDto.description;
+            return await this.documentRepository.update(document.id,document);
+        }
+
+        // nếu chưa là bộ phận cuối cùng xử lí thì sẽ cập nhật tới bộ phận xử lí tiếp theo
+        
 
         let nextDepartment = null;
         console.log(document);
@@ -100,7 +149,7 @@ export class DocumentService {
             
             if(document.proceduralStep.step == proceduralSteps[index].step){
                 document.proceduralStep = proceduralSteps[index+1];
-                document.proceduralStep.step = proceduralSteps[index+1].step;
+                // document.proceduralStep.step = proceduralSteps[index+1].step;
                 nextDepartment = proceduralSteps[index+1].department;
                 break;
             }
@@ -128,4 +177,143 @@ export class DocumentService {
         return await this.documentRepository.update(document.id,document);
         
     }
+
+
+    async getDocumentById(id: number): Promise<any>{
+        let data:any =  await this.documentRepository.findOne({
+            where:{
+                id: id
+            },
+            relations: ['department', 'service','proceduralStep','attributeValues.attributeFormService' ]
+            // {
+            //     department: true,
+            //     service: true,
+            //     proceduralStep: true,
+            //     attributeValues: true
+            // }
+        })
+
+        console.log(data?.attributeValues.length);
+        
+
+        
+
+        for (let index = 0; index < data?.attributeValues.length; index++) {
+            if(data?.attributeValues[index].attributeFormService.type == 'Checkbox' || data?.attributeValues[index].attributeFormService.type == 'Select'){
+                data.attributeValues[index].enum = await this.attributeFormEnumRepository.findOne({
+                    where: {
+                        id: Number(data?.attributeValues[index].value)
+                    }
+                })
+            }
+            
+          }
+
+        return data;
+      }
+
+
+      async getAll(department_id: number,isAdmin: boolean): Promise<any[]> {
+        console.log(department_id);
+        console.log(isAdmin);
+        
+        let documents: any;
+        if(isAdmin){
+            documents = await this.documentRepository.find({
+                relations: {
+                    department: true,
+                    service: true,
+                    proceduralStep: {
+                        department: true
+                    },
+                    documentActivityTraces: {
+                        officer: true,
+                        proceduralStep: {
+                            department: true
+                        }
+                    }
+                }
+            });
+        }else{
+            documents = await this.documentRepository.find({
+                where:[
+                    {
+                        department:{
+                            id: department_id,
+                        },
+    
+                    },
+                    {
+                        proceduralStep:{
+                            department:{
+                                id: department_id
+                            }
+                        }
+                    }
+                ],
+                relations: {
+                    department: true,
+                    service: true,
+                    proceduralStep: {
+                        department: true
+                    },
+                    documentActivityTraces: {
+                        officer: true,
+                        proceduralStep: {
+                            department: true
+                        }
+                    }
+                }
+            });
+        }
+            
+    
+        if (documents.length > 0) {
+            let data = await Promise.all(documents.map(async (doc) => {
+                let user = await this.userRepository.findOne({
+                    where:{
+                        id: Number(doc.user_id)
+                    }
+                });
+
+                const proceduralSteps = await this.proceduralStepRepository.find({
+                    where:{
+                        service:{
+                            id: Number(doc.service.id)
+                        }
+                    },
+                    relations:{
+                        department: true
+                    }
+                })
+                // console.log(proceduralSteps);
+                proceduralSteps.sort((a, b) => a.step - b.step);
+        
+                console.log(proceduralSteps);
+                let is_last_step = false;
+                // kiểm tra xem đã là bộ phận cuối cùng xử lí chưa 
+                if(doc.proceduralStep.id == proceduralSteps[proceduralSteps.length -1].id){
+                    is_last_step = true; // cập nhật trạng thái hoàn thành
+                    
+                }
+                return {
+                    ...doc,
+                    user: user,
+                    is_last_step: is_last_step
+                };
+            }));
+
+
+            
+    
+        
+            
+            return data;
+        }
+    
+        return [];
+    }
+    
+
+      
 }

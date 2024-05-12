@@ -85,14 +85,22 @@ export class AuthService {
     }
 
     async officerLogin(userLoginDto: UserLoginDto):Promise<any>{
-        const user = await this.officerRepository.findOneBy({
-            identifier: userLoginDto.identifier
+        const user = await this.officerRepository.findOne({
+            where: {
+                identifier: userLoginDto.identifier
+            },
+            relations: {
+                roles: true,
+                department: true
+            },
+
+           
         })
         if(!user) throw new HttpException('User not found',HttpStatus.NOT_FOUND);
         const checkPassword = await bcrypt.compareSync(userLoginDto.password,user.password);
         if(!checkPassword) throw new HttpException('Password is incorrect',HttpStatus.BAD_REQUEST);
 
-        const payload = {id:user.id,identifier: user.identifier,type:'officer', isAdmin:user.isAdmin};
+        const payload = {id:user.id,identifier: user.identifier,type:'officer', isAdmin:user.isAdmin, department_id: user.department.id};
         return await this.generateToken(payload);
     }
 }

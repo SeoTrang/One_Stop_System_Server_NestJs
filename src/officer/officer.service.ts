@@ -14,6 +14,7 @@ import { FormUserDto } from 'src/user/dto/form-user.dto';
 import { FormUpdateUserDto } from 'src/user/dto/update-user.dto';
 import {UpdateOfficerDto } from './dto/updateOfficer.dto';
 import { FormUpdateOfficerDto } from './dto/FormUpdateOfficer.dto';
+import { compareArrayRoles } from 'util/compareArrayRoles';
 
 @Injectable()
 export class OfficerService {
@@ -85,6 +86,7 @@ export class OfficerService {
         return await this.officerRepository.save(OfficerDto);
     }
     
+ 
 
     async getById(id: number) : Promise<any>{
         return await this.officerRepository.findOne({
@@ -92,7 +94,8 @@ export class OfficerService {
                 id: id
             },
             relations:{
-                roles: true
+                roles: true,
+                department: true
             }
         })
     }
@@ -103,7 +106,8 @@ export class OfficerService {
                 id: id
             },
             relations:{
-                roles: true
+                roles: true,
+                department: true
             }
         })
     }
@@ -111,41 +115,57 @@ export class OfficerService {
     async getAll() : Promise<any>{
         return await this.officerRepository.find({
             relations:{
-                roles: true
+                roles: true,
+                department: true
             }
         })
     }
 
     // Role-Based Access Control
-    async set_RBAC(role: any, user_id: number): Promise<any>{
-        console.log(role);
+    async set_RBAC(body: any, user_id: number): Promise<any>{
+        console.log(body);
         console.log(user_id);
         let user_save = new OfficerDto();
         let user = await this.officerRepository.findOne({
             where:{
                 id: user_id
+            },
+            relations:{
+                department: true
             }
         })
-
         console.log(user);
-        
+        // return {
+        //     roles_revoked, new_roles
+        // };
         if (!user) {
             throw new HttpException('user not found',HttpStatus.NOT_FOUND);
         }
-        // const roles = await role.roles.map(async(value: any) => {
-        //     const role = await this.roleService.getById(Number(value))
-        //     return {
-        //         ...role
-        //     }
-        // })
+
+
+        // trước tiên là phải xóa các quyền bị thu hồi trước
+
+
+
         // Sử dụng Promise.all để chờ tất cả các promise hoàn thành
-        const roles = await Promise.all(role.roles.map(async (value: any) => {
+        const roles = await Promise.all(body.roles.map(async (value: any) => {
             const role = await this.roleService.getById(Number(value));
             return {
                 ...role
             };
         }));
 
+        let department: Department = null;
+        if(user.department.id !== Number(body.new_department_id)){
+            department = await this.departmentRepository.findOne({
+                where:{
+                    id: Number(body.new_department_id)
+                }
+            })
+        }
+        if(department){
+            user.department = department;
+        }
         user_save = {
             ...user,
             roles: roles

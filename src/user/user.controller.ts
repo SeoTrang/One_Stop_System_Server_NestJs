@@ -51,4 +51,11 @@ export class UserController {
         
         return await this.userService.getUserByIdentifier(identifier);
     }
+
+    @Get(':id')
+    async getUserById(@Param("id") id: string): Promise<any>{
+        console.log(id);
+        
+        return await this.userService.getUserById(Number(id));
+    }
 }

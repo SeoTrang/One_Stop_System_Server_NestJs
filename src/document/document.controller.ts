@@ -1,9 +1,11 @@
-import { Body, Controller, HttpException, HttpStatus, Param, Post, Put, Req, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Get, HttpException, HttpStatus, Param, Post, Put, Req, Request, UsePipes, ValidationPipe } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { DocumentService } from './document.service';
 import { AttributeValueService } from 'src/attribute-value/attribute-value.service';
 import { UpdateDocumentDto } from './dto/updateDocment.dto';
 import { FormDocumentDto } from './dto/form-document.dto';
+import { DocxServiceService } from 'src/core/service/docx-service.service';
+import { convertDataToDocx } from 'util/convertDataToDocx';
 
 @ApiTags('Document')
 @ApiBearerAuth()
@@ -11,7 +13,8 @@ import { FormDocumentDto } from './dto/form-document.dto';
 export class DocumentController {
     constructor(
         private documentService: DocumentService,
-        private attributeValueService: AttributeValueService
+        private attributeValueService: AttributeValueService,
+        private docxServiceService: DocxServiceService
     ){}
 
     @Post()
@@ -33,6 +36,9 @@ export class DocumentController {
         
         return true;
     }
+    
+   
+
 
     @Put(':id')
     @UsePipes(ValidationPipe)
@@ -42,5 +48,34 @@ export class DocumentController {
         await this.documentService.update(Number(id),updateDocumentDto);
         return true;
     }
+    @Get('/gen-docx/:id')
+    async genDocx(@Param('id') id: number):Promise<any>{
+        let data = await this.documentService.getDocumentById(id);
+        let dataConverted = convertDataToDocx(data?.attributeValues);
+        await this.docxServiceService.genDocx(dataConverted,'/public/auto_gen_docx/test2.docx');
+    }
+
+    @Get('all')
+    async getAll(@Request() req: any):Promise<any[]>{
+        console.log("okl");
+        console.log(req['user_data'])
+
+        return await this.documentService.getAll(Number(req['user_data'].department_id), req['user_data'].isAdmin);
+    }
+    
+    @Get(':id')
+    async getDocumentById(@Param('id') id: number): Promise<any>{
+        return await this.documentService.getDocumentById(id);
+        // let data = await this.documentService.getDocumentById(id);
+        // console.log(data?.attributeValues);
+        
+        // let result = convertDataToDocx(data?.attributeValues);
+        // return result;
+    }
+
+
+    
+
+    
 
 }

@@ -22,3 +22,4 @@ export class AttributeValue{
     @ManyToOne(()=> AttributeFormService,(attributeFormservice) => attributeFormservice.attributeValues)
     attributeFormService: AttributeFormService;
 }
+
