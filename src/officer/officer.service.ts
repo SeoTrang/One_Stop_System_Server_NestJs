@@ -237,4 +237,14 @@ export class OfficerService {
             // Ví dụ: throw error hoặc xử lý theo cách khác tùy thuộc vào logic của bạn
         }
     }
+
+    async getByDepartmentId(department_id: number): Promise<Officer[]>{
+        return await this.officerRepository.find({
+            where: {
+                department: {
+                    id: department_id
+                }
+            }
+        })
+    }
 }

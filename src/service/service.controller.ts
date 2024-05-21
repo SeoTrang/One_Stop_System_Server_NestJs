@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Req, UsePipes, ValidationPipe } from '@nestjs/common';
 import { ServiceService } from './service.service';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { ServiceDto } from './dto/service.dto';
@@ -14,8 +14,9 @@ export class ServiceController {
 
     @Post()
     @UsePipes(ValidationPipe)
-    async create(@Body() serviceDto: ServiceDto):Promise<any>{
-        return await this.serviceService.create(serviceDto);
+    async create(@Req() req: any,@Body() serviceDto: ServiceDto):Promise<any>{
+        const user_identifier = req['user_data'].identifier;
+        return await this.serviceService.create(serviceDto, String(user_identifier));
     }
 
     @Get('/all-detail')

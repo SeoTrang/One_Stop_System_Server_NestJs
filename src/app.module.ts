@@ -35,6 +35,12 @@ import { DownloadModule } from './download/download.module';
 import { Service } from './core/service/.service';
 import { DocxServiceService } from './core/service/docx-service.service';
 import { DocumentActivityTraceModule } from './document-activity-trace/document-activity-trace.module';
+import { NotificationTypeModule } from './notification-type/notification-type.module';
+import { NotificationsModule } from './notifications/notifications.module';
+import { NotificationReceiverModule } from './notification-receiver/notification-receiver.module';
+import { QuestionModule } from './question/question.module';
+import { QuestionMediaContentModule } from './question-media-content/question-media-content.module';
+import { QuestionSeenModule } from './question-seen/question-seen.module';
 
 @Module({
   imports: [
@@ -82,6 +88,12 @@ import { DocumentActivityTraceModule } from './document-activity-trace/document-
     FormFileModule,
     DownloadModule,
     DocumentActivityTraceModule,
+    NotificationTypeModule,
+    NotificationsModule,
+    NotificationReceiverModule,
+    QuestionModule,
+    QuestionMediaContentModule,
+    QuestionSeenModule,
   ],
   controllers: [AppController, FileController],
   providers: [

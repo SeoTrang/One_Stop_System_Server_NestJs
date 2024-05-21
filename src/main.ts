@@ -28,6 +28,12 @@ async function bootstrap() {
     .addTag('form-file')
     .addTag('Download')
     .addTag('document-activity-trace')
+    .addTag('Notifications')
+    .addTag('Notification-type')
+    .addTag('Notification-receiver')
+    .addTag('Question')
+    .addTag('Question-media-content')
+    .addTag('Question-seen')
     .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, config);

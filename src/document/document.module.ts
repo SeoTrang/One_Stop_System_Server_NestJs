@@ -12,12 +12,50 @@ import { AttributeValueService } from 'src/attribute-value/attribute-value.servi
 import { AttributeFormService } from 'src/attribute-form-service/entities/attributeFormService.entity';
 import { DocxServiceService } from 'src/core/service/docx-service.service';
 import { AttributeFormEnum } from 'src/attribute-form-enum/entities/attributeFormEnum.entity';
+import { OfficerService } from 'src/officer/officer.service';
+import { Officer } from 'src/officer/entities/officer.entity';
+import { Role } from 'src/role/entities/role.entity';
+import { RoleService } from 'src/role/role.service';
+import { NotificationsService } from 'src/notifications/notifications.service';
+import { Notifications } from 'src/notifications/entities/notifications.entity';
+import { NotificationType } from 'src/notification-type/entities/notificationType.entity';
+import { NotificationReceiver } from 'src/notification-receiver/entities/notificationReceiver.entity';
+import { UserService } from 'src/user/user.service';
+import { Faculties } from 'src/faculties/entities/faculties.entity';
+import { ServiceService } from 'src/service/service.service';
+import { ProceduralStepService } from 'src/procedural-step/procedural-step.service';
 
 @Module({
-  imports:[
-    TypeOrmModule.forFeature([User,Document,Department,Service,ProceduralStep,AttributeValue,AttributeFormService,AttributeFormEnum])
+  imports: [
+    TypeOrmModule.forFeature([
+      User,
+      Document,
+      Department,
+      Service,
+      ProceduralStep,
+      AttributeValue,
+      AttributeFormService,
+      AttributeFormEnum,
+      Officer,
+      Role,
+      Notifications,
+      NotificationType,
+      NotificationReceiver,
+      Faculties,
+      Service
+    ]),
   ],
   controllers: [DocumentController],
-  providers: [DocumentService,AttributeValueService, DocxServiceService]
+  providers: [
+    DocumentService,
+    AttributeValueService,
+    DocxServiceService,
+    OfficerService,
+    RoleService,
+    NotificationsService,
+    UserService,
+    ServiceService,
+    ProceduralStepService
+  ],
 })
 export class DocumentModule {}

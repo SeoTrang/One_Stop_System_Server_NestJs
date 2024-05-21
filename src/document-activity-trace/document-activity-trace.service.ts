@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateDocTraceDto } from './dto/create-doc-trace.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DocumentActivityTrace } from './entities/documentActivityTrace.entity';
@@ -44,5 +44,28 @@ export class DocumentActivityTraceService {
 
 
         return await this.documentActivityTraceRepository.save(documentActivityTrace);
+    }
+
+    async getByDocumentId(document_id: number): Promise<any>{
+        try {
+            let activity_trace = await this.documentActivityTraceRepository.find({
+                where: {
+                    document: {
+                        id: document_id
+                    }
+                },
+                relations: {
+                    officer: true,
+                    proceduralStep: {
+                        department: true
+                    }
+                }
+            })
+            return activity_trace;
+        } catch (error) {
+            console.log(error);
+            new HttpException('server error: '+ error.message,HttpStatus.INTERNAL_SERVER_ERROR);
+            
+        }
     }
 }

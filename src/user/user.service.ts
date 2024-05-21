@@ -16,6 +16,7 @@ export class UserService {
         @InjectRepository(User) private userRepository: Repository<User>,
         @InjectRepository(Faculties) private facultiesRepository: Repository<Faculties>,
         @InjectRepository(Officer) private officerRepository: Repository<Officer>
+        
     )
     {}
 

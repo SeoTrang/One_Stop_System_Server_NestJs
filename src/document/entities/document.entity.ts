@@ -12,7 +12,7 @@ export class Document{
     id: number;
 
     @Column()
-    status: number; //1.pending 2.success 0.cancled
+    status: number; //1.pending 2.confirm 3.success 0.cancled
 
     @Column({nullable: true})
     description: string;

@@ -3,8 +3,9 @@ import { FormFile } from "src/form-file/entities/formFile.entity";
 import { Officer } from "src/officer/entities/officer.entity";
 import { Post } from "src/post/entities/post.entity";
 import { ProceduralStep } from "src/procedural-step/entities/proceduralStep.entity";
+import { Question } from "src/question/entities/question.entity";
 import { Service } from "src/service/entities/service.entity";
-import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 @Entity()
 export class Department{
@@ -40,4 +41,7 @@ export class Department{
 
     @OneToMany(() => FormFile,(formFile) => formFile.department)
     formFiles: FormFile[];
+
+    @OneToMany(() => Question, (question) => question.department)
+    questions: Question[];
 }

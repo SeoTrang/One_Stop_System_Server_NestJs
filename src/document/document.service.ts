@@ -109,7 +109,7 @@ export class DocumentService {
         // console.log(proceduralSteps);
         proceduralSteps.sort((a, b) => a.step - b.step);
 
-        console.log(proceduralSteps);
+        // console.log(proceduralSteps);
 
         
 
@@ -132,16 +132,19 @@ export class DocumentService {
         
         // kiểm tra xem đã là bộ phận cuối cùng xử lí chưa 
         if(document.proceduralStep.id == proceduralSteps[proceduralSteps.length -1].id){
-            document.status = 2; // cập nhật trạng thái hoàn thành
+            document.status = 3; // cập nhật trạng thái hoàn thành
             document.description = updateDocumentDto.description;
             return await this.documentRepository.update(document.id,document);
         }
 
+        if(document.status != 2){
+            document.status = 2;
+        }
         // nếu chưa là bộ phận cuối cùng xử lí thì sẽ cập nhật tới bộ phận xử lí tiếp theo
         
 
         let nextDepartment = null;
-        console.log(document);
+        // console.log(document);
         let index = 0;
         for(index = 0; index < proceduralSteps.length; index++){
             // console.log(document.proceduralStep.step);
@@ -155,15 +158,15 @@ export class DocumentService {
             }
         }
         // let nextDepartment = proceduralSteps[index+1].department;
-        console.log('===============================');
+        // console.log('===============================');
         
-        console.log(document);
-        console.log(nextDepartment);
+        // console.log(document);
+        // console.log(nextDepartment);
 
         document.address = nextDepartment.address;
 
-        console.log('===============================end');
-        console.log(document);
+        // console.log('===============================end');
+        // console.log(document);
         
 
         
@@ -176,6 +179,17 @@ export class DocumentService {
 
         return await this.documentRepository.update(document.id,document);
         
+    }
+
+    async updateStatus(status: number, document_id: number): Promise<any>{
+        let document = await this.documentRepository.findOne({
+            where: {
+                id: document_id
+            }
+        })
+
+        document.status = status;
+        return await this.documentRepository.update(document.id, document);
     }
 
 
@@ -208,6 +222,25 @@ export class DocumentService {
             }
             
           }
+
+        return data;
+      }
+
+      async getDocumentById2(id: number): Promise<Document>{
+        let data:Document =  await this.documentRepository.findOne({
+            where:{
+                id: id
+            },
+            relations: ['department', 'service','proceduralStep','attributeValues.attributeFormService' ]
+            // {
+            //     department: true,
+            //     service: true,
+            //     proceduralStep: true,
+            //     attributeValues: true
+            // }
+        })
+
+        console.log(data?.attributeValues.length);
 
         return data;
       }

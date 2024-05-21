@@ -1,11 +1,14 @@
 import { MigrationInterface, QueryRunner } from "typeorm";
 
-export class CreateDocumentActivityTrace1714964610737 implements MigrationInterface {
-    name = 'CreateDocumentActivityTrace1714964610737'
+export class UpdateNext1715851647543 implements MigrationInterface {
+    name = 'UpdateNext1715851647543'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
-        await queryRunner.query(`ALTER TABLE \`attribute_value\` DROP FOREIGN KEY \`FK_98a2967d8b070d283b464200151\``);
-        await queryRunner.query(`CREATE TABLE \`document_activity_trace\` (\`id\` int NOT NULL AUTO_INCREMENT, \`status\` enum ('resolve', 'reject') NOT NULL, \`officerId\` int NULL, \`documentId\` int NULL, \`proceduralStepId\` int NULL, PRIMARY KEY (\`id\`)) ENGINE=InnoDB`);
+        await queryRunner.query(`ALTER TABLE \`attribute_form_service\` DROP FOREIGN KEY \`FK_1c576fe36bf8a92de40f8a41862\``);
+        await queryRunner.query(`ALTER TABLE \`notification_receiver\` ADD \`created_at\` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6)`);
+        await queryRunner.query(`ALTER TABLE \`notification_receiver\` ADD \`updated_at\` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6)`);
+        await queryRunner.query(`ALTER TABLE \`notifications\` ADD \`created_at\` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6)`);
+        await queryRunner.query(`ALTER TABLE \`notifications\` ADD \`updated_at\` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6)`);
         await queryRunner.query(`ALTER TABLE \`user\` DROP FOREIGN KEY \`FK_848c0779e2423d52fd964bbb793\``);
         await queryRunner.query(`ALTER TABLE \`user\` CHANGE \`avatar\` \`avatar\` varchar(255) NULL`);
         await queryRunner.query(`ALTER TABLE \`user\` CHANGE \`facultyId\` \`facultyId\` int NULL`);
@@ -19,6 +22,12 @@ export class CreateDocumentActivityTrace1714964610737 implements MigrationInterf
         await queryRunner.query(`ALTER TABLE \`procedural_step\` DROP FOREIGN KEY \`FK_c311fc49373579eb39b58b2f320\``);
         await queryRunner.query(`ALTER TABLE \`procedural_step\` CHANGE \`departmentId\` \`departmentId\` int NULL`);
         await queryRunner.query(`ALTER TABLE \`procedural_step\` CHANGE \`serviceId\` \`serviceId\` int NULL`);
+        await queryRunner.query(`ALTER TABLE \`document_activity_trace\` DROP FOREIGN KEY \`FK_d489bb3d48190c83617a09b7797\``);
+        await queryRunner.query(`ALTER TABLE \`document_activity_trace\` DROP FOREIGN KEY \`FK_17837d20d4ce084418e3bc8ef4c\``);
+        await queryRunner.query(`ALTER TABLE \`document_activity_trace\` DROP FOREIGN KEY \`FK_cd350df0baea392324963523848\``);
+        await queryRunner.query(`ALTER TABLE \`document_activity_trace\` CHANGE \`officerId\` \`officerId\` int NULL`);
+        await queryRunner.query(`ALTER TABLE \`document_activity_trace\` CHANGE \`documentId\` \`documentId\` int NULL`);
+        await queryRunner.query(`ALTER TABLE \`document_activity_trace\` CHANGE \`proceduralStepId\` \`proceduralStepId\` int NULL`);
         await queryRunner.query(`ALTER TABLE \`role\` CHANGE \`routerLink\` \`routerLink\` varchar(255) NULL`);
         await queryRunner.query(`ALTER TABLE \`role\` CHANGE \`icon\` \`icon\` varchar(255) NULL`);
         await queryRunner.query(`ALTER TABLE \`role\` CHANGE \`parent_id\` \`parent_id\` int NULL`);
@@ -44,15 +53,19 @@ export class CreateDocumentActivityTrace1714964610737 implements MigrationInterf
         await queryRunner.query(`ALTER TABLE \`document\` CHANGE \`departmentId\` \`departmentId\` int NULL`);
         await queryRunner.query(`ALTER TABLE \`document\` CHANGE \`serviceId\` \`serviceId\` int NULL`);
         await queryRunner.query(`ALTER TABLE \`document\` CHANGE \`proceduralStepId\` \`proceduralStepId\` int NULL`);
+        await queryRunner.query(`ALTER TABLE \`attribute_value\` DROP FOREIGN KEY \`FK_98a2967d8b070d283b464200151\``);
         await queryRunner.query(`ALTER TABLE \`attribute_value\` DROP FOREIGN KEY \`FK_f23d86ebd6d26e00b50a83e4fd4\``);
         await queryRunner.query(`ALTER TABLE \`attribute_value\` CHANGE \`value\` \`value\` varchar(255) NULL`);
         await queryRunner.query(`ALTER TABLE \`attribute_value\` CHANGE \`documentId\` \`documentId\` int NULL`);
         await queryRunner.query(`ALTER TABLE \`attribute_value\` CHANGE \`attributeFormServiceId\` \`attributeFormServiceId\` int NULL`);
-        await queryRunner.query(`ALTER TABLE \`attribute_form_service\` DROP FOREIGN KEY \`FK_1c576fe36bf8a92de40f8a41862\``);
         await queryRunner.query(`ALTER TABLE \`attribute_form_service\` CHANGE \`serviceId\` \`serviceId\` int NULL`);
         await queryRunner.query(`ALTER TABLE \`service\` DROP FOREIGN KEY \`FK_4ea0bb0b22e0fbee8449e13a897\``);
         await queryRunner.query(`ALTER TABLE \`service\` CHANGE \`description\` \`description\` text NULL`);
         await queryRunner.query(`ALTER TABLE \`service\` CHANGE \`departmentId\` \`departmentId\` int NULL`);
+        await queryRunner.query(`ALTER TABLE \`notification_receiver\` DROP FOREIGN KEY \`FK_3059a57127fb6b14dc2c2d195b9\``);
+        await queryRunner.query(`ALTER TABLE \`notification_receiver\` CHANGE \`notificationId\` \`notificationId\` int NULL`);
+        await queryRunner.query(`ALTER TABLE \`notifications\` DROP FOREIGN KEY \`FK_10743966c989299431e483fa780\``);
+        await queryRunner.query(`ALTER TABLE \`notifications\` CHANGE \`notificationTypeId\` \`notificationTypeId\` int NULL`);
         await queryRunner.query(`ALTER TABLE \`user\` ADD CONSTRAINT \`FK_848c0779e2423d52fd964bbb793\` FOREIGN KEY (\`facultyId\`) REFERENCES \`faculties\`(\`id\`) ON DELETE NO ACTION ON UPDATE NO ACTION`);
         await queryRunner.query(`ALTER TABLE \`attribute_form_enum\` ADD CONSTRAINT \`FK_db6f5036fca0a8ff7b66e43d85a\` FOREIGN KEY (\`attributeFormServiceId\`) REFERENCES \`attribute_form_service\`(\`id\`) ON DELETE NO ACTION ON UPDATE NO ACTION`);
         await queryRunner.query(`ALTER TABLE \`form_file\` ADD CONSTRAINT \`FK_c9a74fea77723723f94869bf692\` FOREIGN KEY (\`serviceId\`) REFERENCES \`service\`(\`id\`) ON DELETE NO ACTION ON UPDATE NO ACTION`);
@@ -74,9 +87,13 @@ export class CreateDocumentActivityTrace1714964610737 implements MigrationInterf
         await queryRunner.query(`ALTER TABLE \`attribute_value\` ADD CONSTRAINT \`FK_f23d86ebd6d26e00b50a83e4fd4\` FOREIGN KEY (\`attributeFormServiceId\`) REFERENCES \`attribute_form_service\`(\`id\`) ON DELETE NO ACTION ON UPDATE NO ACTION`);
         await queryRunner.query(`ALTER TABLE \`attribute_form_service\` ADD CONSTRAINT \`FK_1c576fe36bf8a92de40f8a41862\` FOREIGN KEY (\`serviceId\`) REFERENCES \`service\`(\`id\`) ON DELETE NO ACTION ON UPDATE NO ACTION`);
         await queryRunner.query(`ALTER TABLE \`service\` ADD CONSTRAINT \`FK_4ea0bb0b22e0fbee8449e13a897\` FOREIGN KEY (\`departmentId\`) REFERENCES \`department\`(\`id\`) ON DELETE NO ACTION ON UPDATE NO ACTION`);
+        await queryRunner.query(`ALTER TABLE \`notification_receiver\` ADD CONSTRAINT \`FK_3059a57127fb6b14dc2c2d195b9\` FOREIGN KEY (\`notificationId\`) REFERENCES \`notifications\`(\`id\`) ON DELETE NO ACTION ON UPDATE NO ACTION`);
+        await queryRunner.query(`ALTER TABLE \`notifications\` ADD CONSTRAINT \`FK_10743966c989299431e483fa780\` FOREIGN KEY (\`notificationTypeId\`) REFERENCES \`notification_type\`(\`id\`) ON DELETE NO ACTION ON UPDATE NO ACTION`);
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
+        await queryRunner.query(`ALTER TABLE \`notifications\` DROP FOREIGN KEY \`FK_10743966c989299431e483fa780\``);
+        await queryRunner.query(`ALTER TABLE \`notification_receiver\` DROP FOREIGN KEY \`FK_3059a57127fb6b14dc2c2d195b9\``);
         await queryRunner.query(`ALTER TABLE \`service\` DROP FOREIGN KEY \`FK_4ea0bb0b22e0fbee8449e13a897\``);
         await queryRunner.query(`ALTER TABLE \`attribute_form_service\` DROP FOREIGN KEY \`FK_1c576fe36bf8a92de40f8a41862\``);
         await queryRunner.query(`ALTER TABLE \`attribute_value\` DROP FOREIGN KEY \`FK_f23d86ebd6d26e00b50a83e4fd4\``);
@@ -98,15 +115,19 @@ export class CreateDocumentActivityTrace1714964610737 implements MigrationInterf
         await queryRunner.query(`ALTER TABLE \`form_file\` DROP FOREIGN KEY \`FK_c9a74fea77723723f94869bf692\``);
         await queryRunner.query(`ALTER TABLE \`attribute_form_enum\` DROP FOREIGN KEY \`FK_db6f5036fca0a8ff7b66e43d85a\``);
         await queryRunner.query(`ALTER TABLE \`user\` DROP FOREIGN KEY \`FK_848c0779e2423d52fd964bbb793\``);
+        await queryRunner.query(`ALTER TABLE \`notifications\` CHANGE \`notificationTypeId\` \`notificationTypeId\` int NULL DEFAULT 'NULL'`);
+        await queryRunner.query(`ALTER TABLE \`notifications\` ADD CONSTRAINT \`FK_10743966c989299431e483fa780\` FOREIGN KEY (\`notificationTypeId\`) REFERENCES \`notification_type\`(\`id\`) ON DELETE NO ACTION ON UPDATE NO ACTION`);
+        await queryRunner.query(`ALTER TABLE \`notification_receiver\` CHANGE \`notificationId\` \`notificationId\` int NULL DEFAULT 'NULL'`);
+        await queryRunner.query(`ALTER TABLE \`notification_receiver\` ADD CONSTRAINT \`FK_3059a57127fb6b14dc2c2d195b9\` FOREIGN KEY (\`notificationId\`) REFERENCES \`notifications\`(\`id\`) ON DELETE NO ACTION ON UPDATE NO ACTION`);
         await queryRunner.query(`ALTER TABLE \`service\` CHANGE \`departmentId\` \`departmentId\` int NULL DEFAULT 'NULL'`);
         await queryRunner.query(`ALTER TABLE \`service\` CHANGE \`description\` \`description\` text NULL DEFAULT 'NULL'`);
         await queryRunner.query(`ALTER TABLE \`service\` ADD CONSTRAINT \`FK_4ea0bb0b22e0fbee8449e13a897\` FOREIGN KEY (\`departmentId\`) REFERENCES \`department\`(\`id\`) ON DELETE NO ACTION ON UPDATE NO ACTION`);
         await queryRunner.query(`ALTER TABLE \`attribute_form_service\` CHANGE \`serviceId\` \`serviceId\` int NULL DEFAULT 'NULL'`);
-        await queryRunner.query(`ALTER TABLE \`attribute_form_service\` ADD CONSTRAINT \`FK_1c576fe36bf8a92de40f8a41862\` FOREIGN KEY (\`serviceId\`) REFERENCES \`service\`(\`id\`) ON DELETE NO ACTION ON UPDATE NO ACTION`);
         await queryRunner.query(`ALTER TABLE \`attribute_value\` CHANGE \`attributeFormServiceId\` \`attributeFormServiceId\` int NULL DEFAULT 'NULL'`);
         await queryRunner.query(`ALTER TABLE \`attribute_value\` CHANGE \`documentId\` \`documentId\` int NULL DEFAULT 'NULL'`);
         await queryRunner.query(`ALTER TABLE \`attribute_value\` CHANGE \`value\` \`value\` varchar(255) NULL DEFAULT 'NULL'`);
         await queryRunner.query(`ALTER TABLE \`attribute_value\` ADD CONSTRAINT \`FK_f23d86ebd6d26e00b50a83e4fd4\` FOREIGN KEY (\`attributeFormServiceId\`) REFERENCES \`attribute_form_service\`(\`id\`) ON DELETE NO ACTION ON UPDATE NO ACTION`);
+        await queryRunner.query(`ALTER TABLE \`attribute_value\` ADD CONSTRAINT \`FK_98a2967d8b070d283b464200151\` FOREIGN KEY (\`documentId\`) REFERENCES \`document\`(\`id\`) ON DELETE NO ACTION ON UPDATE NO ACTION`);
         await queryRunner.query(`ALTER TABLE \`document\` CHANGE \`proceduralStepId\` \`proceduralStepId\` int NULL DEFAULT 'NULL'`);
         await queryRunner.query(`ALTER TABLE \`document\` CHANGE \`serviceId\` \`serviceId\` int NULL DEFAULT 'NULL'`);
         await queryRunner.query(`ALTER TABLE \`document\` CHANGE \`departmentId\` \`departmentId\` int NULL DEFAULT 'NULL'`);
@@ -132,6 +153,12 @@ export class CreateDocumentActivityTrace1714964610737 implements MigrationInterf
         await queryRunner.query(`ALTER TABLE \`role\` CHANGE \`parent_id\` \`parent_id\` int NULL DEFAULT 'NULL'`);
         await queryRunner.query(`ALTER TABLE \`role\` CHANGE \`icon\` \`icon\` varchar(255) NULL DEFAULT 'NULL'`);
         await queryRunner.query(`ALTER TABLE \`role\` CHANGE \`routerLink\` \`routerLink\` varchar(255) NULL DEFAULT 'NULL'`);
+        await queryRunner.query(`ALTER TABLE \`document_activity_trace\` CHANGE \`proceduralStepId\` \`proceduralStepId\` int NULL DEFAULT 'NULL'`);
+        await queryRunner.query(`ALTER TABLE \`document_activity_trace\` CHANGE \`documentId\` \`documentId\` int NULL DEFAULT 'NULL'`);
+        await queryRunner.query(`ALTER TABLE \`document_activity_trace\` CHANGE \`officerId\` \`officerId\` int NULL DEFAULT 'NULL'`);
+        await queryRunner.query(`ALTER TABLE \`document_activity_trace\` ADD CONSTRAINT \`FK_cd350df0baea392324963523848\` FOREIGN KEY (\`proceduralStepId\`) REFERENCES \`procedural_step\`(\`id\`) ON DELETE NO ACTION ON UPDATE NO ACTION`);
+        await queryRunner.query(`ALTER TABLE \`document_activity_trace\` ADD CONSTRAINT \`FK_17837d20d4ce084418e3bc8ef4c\` FOREIGN KEY (\`documentId\`) REFERENCES \`document\`(\`id\`) ON DELETE NO ACTION ON UPDATE NO ACTION`);
+        await queryRunner.query(`ALTER TABLE \`document_activity_trace\` ADD CONSTRAINT \`FK_d489bb3d48190c83617a09b7797\` FOREIGN KEY (\`officerId\`) REFERENCES \`officer\`(\`id\`) ON DELETE NO ACTION ON UPDATE NO ACTION`);
         await queryRunner.query(`ALTER TABLE \`procedural_step\` CHANGE \`serviceId\` \`serviceId\` int NULL DEFAULT 'NULL'`);
         await queryRunner.query(`ALTER TABLE \`procedural_step\` CHANGE \`departmentId\` \`departmentId\` int NULL DEFAULT 'NULL'`);
         await queryRunner.query(`ALTER TABLE \`procedural_step\` ADD CONSTRAINT \`FK_c311fc49373579eb39b58b2f320\` FOREIGN KEY (\`serviceId\`) REFERENCES \`service\`(\`id\`) ON DELETE NO ACTION ON UPDATE NO ACTION`);
@@ -145,8 +172,11 @@ export class CreateDocumentActivityTrace1714964610737 implements MigrationInterf
         await queryRunner.query(`ALTER TABLE \`user\` CHANGE \`facultyId\` \`facultyId\` int NULL DEFAULT 'NULL'`);
         await queryRunner.query(`ALTER TABLE \`user\` CHANGE \`avatar\` \`avatar\` varchar(255) NULL DEFAULT 'NULL'`);
         await queryRunner.query(`ALTER TABLE \`user\` ADD CONSTRAINT \`FK_848c0779e2423d52fd964bbb793\` FOREIGN KEY (\`facultyId\`) REFERENCES \`faculties\`(\`id\`) ON DELETE NO ACTION ON UPDATE NO ACTION`);
-        await queryRunner.query(`DROP TABLE \`document_activity_trace\``);
-        await queryRunner.query(`ALTER TABLE \`attribute_value\` ADD CONSTRAINT \`FK_98a2967d8b070d283b464200151\` FOREIGN KEY (\`documentId\`) REFERENCES \`document\`(\`id\`) ON DELETE CASCADE ON UPDATE NO ACTION`);
+        await queryRunner.query(`ALTER TABLE \`notifications\` DROP COLUMN \`updated_at\``);
+        await queryRunner.query(`ALTER TABLE \`notifications\` DROP COLUMN \`created_at\``);
+        await queryRunner.query(`ALTER TABLE \`notification_receiver\` DROP COLUMN \`updated_at\``);
+        await queryRunner.query(`ALTER TABLE \`notification_receiver\` DROP COLUMN \`created_at\``);
+        await queryRunner.query(`ALTER TABLE \`attribute_form_service\` ADD CONSTRAINT \`FK_1c576fe36bf8a92de40f8a41862\` FOREIGN KEY (\`serviceId\`) REFERENCES \`service\`(\`id\`) ON DELETE CASCADE ON UPDATE NO ACTION`);
     }
 
 }
