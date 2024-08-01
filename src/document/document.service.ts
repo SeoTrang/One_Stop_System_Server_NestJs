@@ -194,6 +194,10 @@ export class DocumentService {
 
 
     async getDocumentById(id: number): Promise<any>{
+        console.log("--------------------------hello world!------------------------");
+        console.log(id);
+        
+        
         let data:any =  await this.documentRepository.findOne({
             where:{
                 id: id

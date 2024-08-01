@@ -30,7 +30,7 @@ export class PostCommentService {
         createPostCommentDto.type_user = type_user;
         createPostCommentDto.content = postCommentDto.content;
         createPostCommentDto.media_content = postCommentDto.media_content;
-        createPostCommentDto.parent_id = postCommentDto.parent_id;
+        createPostCommentDto.parent_id = postCommentDto.parent_id || null;
 
         const res = await this.postCommentRepository.save(createPostCommentDto);
         return {}

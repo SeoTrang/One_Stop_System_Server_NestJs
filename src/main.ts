@@ -34,6 +34,7 @@ async function bootstrap() {
     .addTag('Question')
     .addTag('Question-media-content')
     .addTag('Question-seen')
+    .addTag('Conversations')
     .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, config);

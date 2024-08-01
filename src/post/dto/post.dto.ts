@@ -13,7 +13,6 @@ export class PostDto{
     caption: string;
 
     @ApiProperty()
-    @IsNotEmpty()
     department_id: number;
 
     user_id: number;

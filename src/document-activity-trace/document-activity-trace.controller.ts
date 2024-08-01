@@ -87,4 +87,5 @@ export class DocumentActivityTraceController {
     async getByDocumentId(@Param('document_id') id: string): Promise<any>{
         return await this.documentActivityTraceService.getByDocumentId(Number(id));
     }
+
 }

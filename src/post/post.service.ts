@@ -67,6 +67,9 @@ export class PostService {
                 reactions: true,
                 comments: true,
                 contents: true
+            },
+            order: {
+                created_at: 'DESC'
             }
         });
 
@@ -75,12 +78,18 @@ export class PostService {
                 data[index].user = await this.userRepository.findOne({
                     where: {
                         id: Number(data[index].user_id)
+                    },
+                    relations:{
+                        faculty: true
                     }
                 })
             }else {
                 data[index].officer = await this.officerRepository.findOne({
                     where: {
                         id: Number(data[index].user_id)
+                    },
+                    relations: {
+                        department: true
                     }
                 })
             }
@@ -90,7 +99,7 @@ export class PostService {
                     if(data[index].comments[j].type_user == "student"){
                         data[index].comments[j].user = await this.userRepository.findOne({
                             where: {
-                                id: Number(data[index].user_id)
+                                id: Number(data[index].comments[j].user_id)
                             }
                         })
                     }else {
@@ -113,12 +122,12 @@ export class PostService {
             console.log(comments);
             
             const sortedComments = this.sortCommentsByHierarchy(comments);
-
+            
+            console.log("------------------------------------comments sorted------------------------------------");
+            
+            console.log(sortedComments);
+            
             data[index].comments = sortedComments;
-            
-
-            
-            
         }
         
         return data;

@@ -1,5 +1,6 @@
+import { Conversation } from "src/conversations/entities/conversations.entity";
 import { Faculties } from "src/faculties/entities/faculties.entity";
-import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 export enum Gender {
     MALE = 'male',
@@ -49,4 +50,7 @@ export class User{
 
     @ManyToOne(() => Faculties, (faculties) => faculties.users)
     faculty: Faculties;
+
+    @OneToMany(() => Conversation, (conversation) => conversation.user)
+    conversations: Conversation[];
 }

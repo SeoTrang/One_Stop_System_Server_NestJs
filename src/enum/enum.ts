@@ -15,3 +15,8 @@ export enum TypeMediaContentQuestion{
     FILE = 'file'
 }
 
+
+export enum TypeQuestion{
+    THAC_MAC = 'Thắc mắc',
+    CAU_HOI = 'Câu hỏi'
+}

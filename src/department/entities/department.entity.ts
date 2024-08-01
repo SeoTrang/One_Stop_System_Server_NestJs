@@ -1,3 +1,4 @@
+import { Conversation } from "src/conversations/entities/conversations.entity";
 import { Document } from "src/document/entities/document.entity";
 import { FormFile } from "src/form-file/entities/formFile.entity";
 import { Officer } from "src/officer/entities/officer.entity";
@@ -44,4 +45,7 @@ export class Department{
 
     @OneToMany(() => Question, (question) => question.department)
     questions: Question[];
+
+    @OneToMany(() => Conversation, (conversation) => conversation.department)
+    conversations: Conversation[];
 }

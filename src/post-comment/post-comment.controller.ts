@@ -16,6 +16,10 @@ export class PostCommentController {
         console.log( req['user_data']);
         let user_id = req['user_data'].id;
         let type_user = req['user_data'].type;
+        console.log("--------------------hello --------------------");
+        
+        console.log(user_id);
+        
 
         return await this.postCommentService.create(Number(user_id), type_user,postCommentDto);
 

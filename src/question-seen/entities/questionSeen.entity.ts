@@ -4,7 +4,7 @@ import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 @Entity()
 export class QuestionSeen{
     @PrimaryGeneratedColumn()
-    id: number;
+    id?: number;
 
     @Column()
     type_user: string;

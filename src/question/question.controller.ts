@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Req, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Get, Post, Req, UsePipes, ValidationPipe } from '@nestjs/common';
 import { FormCreateQuestionDto } from './dto/formCreateQuestion.dto';
 import { QuestionService } from './question.service';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
@@ -37,5 +37,12 @@ export class QuestionController {
         return true;
 
 
+    }
+
+
+    @Get('/by-department')
+    async getQuestionByDepartment(@Req() req:any): Promise<any>{
+        const department_id = req['user_data'].department_id;
+        return await this.questionService.getLatestQuestionsByDepartment(Number(department_id));
     }
 }

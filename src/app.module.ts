@@ -41,6 +41,7 @@ import { NotificationReceiverModule } from './notification-receiver/notification
 import { QuestionModule } from './question/question.module';
 import { QuestionMediaContentModule } from './question-media-content/question-media-content.module';
 import { QuestionSeenModule } from './question-seen/question-seen.module';
+import { ConsersationsModule } from './conversations/conversations.module';
 
 @Module({
   imports: [
@@ -94,6 +95,7 @@ import { QuestionSeenModule } from './question-seen/question-seen.module';
     QuestionModule,
     QuestionMediaContentModule,
     QuestionSeenModule,
+    ConsersationsModule,
   ],
   controllers: [AppController, FileController],
   providers: [

@@ -46,19 +46,30 @@ export class FileController {
         storage: storageConfig('common'),
         fileFilter: (req, file, cb) => {
             const ext = extname(file.originalname);
-            const allowedExtArr = ['.jpg', '.png', '.jpeg', '.gif'];
-            if (!allowedExtArr.includes(ext)) {
-                req.fileValidationError = 'Wrong file extension type. accepted file extensions: ' + allowedExtArr.toString();
-                cb(null, false);
-            } else {
-                const fileSize = parseInt(req.headers['content-length']);
-                if (fileSize > 1024 * 1024 * 5) {
-                    req.fileValidationError = 'File size is too large. File size must be less than 5MB';
-                    cb(null, false);
-                } else {
-                    cb(null, true);
-                }
-            }
+            const fileSize = parseInt(req.headers['content-length']);
+            cb(null, true);
+            // 
+            // if (fileSize > 1024 * 1024 * 5) {
+            //     req.fileValidationError = 'File size is too large. File size must be less than 5MB';
+            //     cb(null, false);
+            // } else {
+            //     cb(null, true);
+            // }
+
+            // 
+            // const allowedExtArr = ['.jpg', '.png', '.jpeg', '.gif'];
+            // if (!allowedExtArr.includes(ext)) {
+            //     req.fileValidationError = 'Wrong file extension type. accepted file extensions: ' + allowedExtArr.toString();
+            //     cb(null, false);
+            // } else {
+            //     const fileSize = parseInt(req.headers['content-length']);
+            //     if (fileSize > 1024 * 1024 * 5) {
+            //         req.fileValidationError = 'File size is too large. File size must be less than 5MB';
+            //         cb(null, false);
+            //     } else {
+            //         cb(null, true);
+            //     }
+            // }
         }
     }))
     async uploadMultipleFiles(@UploadedFiles() files: Array<Express.Multer.File>): Promise<string[]> {

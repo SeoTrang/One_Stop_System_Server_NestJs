@@ -29,14 +29,18 @@ export class NotificationsController {
       let actor = await this.userService.getUserByIdentifier(notification.actor_identifier);
       let entity: any = null;
       let entity_reference = null;
+      let department = null;
       
       switch (notification.entity_type) {
         case 'service':
           entity = await this.serviceService.getById2(notification.entity_id);
+          let tempData1 = await this.serviceService.getById3(notification.entity_id);
+          department = tempData1?.department;
           break;
         case 'document':
             let tempData = await this.documentService.getDocumentById(notification.entity_id);
             entity_reference = tempData?.service?.name;
+            department = tempData?.department;
           break;
         default:
           break;
@@ -45,7 +49,8 @@ export class NotificationsController {
         ...notification,
         actor: actor,
         entity: entity?.name,
-        entity_reference: entity_reference
+        entity_reference: entity_reference,
+        department: department
       };
     });
 

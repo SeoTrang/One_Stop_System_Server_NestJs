@@ -46,8 +46,8 @@ export class PostController {
         let postSave = await this.postService.create(Number(postDto.department_id),createPostDto);
         // console.log(postSave.id);
         
-
-        let postMediaContentArr: PostMendiaContentDto[] = []; // Khởi tạo mảng mới
+        if(postDto.content.length > 0){
+            let postMediaContentArr: PostMendiaContentDto[] = []; // Khởi tạo mảng mới
 
         postDto.content.forEach(content => {
             // Tạo một đối tượng PostMendiaContentDto mới từ mỗi phần tử trong mảng content
@@ -64,6 +64,8 @@ export class PostController {
         await this.postMediaContentService.create(postMediaContentArr);
 
         // console.log(postMediaContentArr);
+        }
+        
         
 
         return {}
@@ -129,6 +131,7 @@ export class PostController {
     @Delete(":id")
 
     async delete(@Param('id') id:string):Promise<any>{
+        // const post = await this.postService.findOnePostItem(id);
         // delete post media content
         await this.postMediaContentService.deleteAllByPostId(Number(id))
         // delete post comments

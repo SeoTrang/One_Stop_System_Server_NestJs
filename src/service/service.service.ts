@@ -91,4 +91,15 @@ export class ServiceService {
             }
         })
     }
+
+    async getById3(id: number): Promise<Service>{
+        return await this.serviceRepository.findOne({
+            where:{
+                id: id
+            },
+            relations: {
+                department: true
+            }
+        })
+    }
 }
